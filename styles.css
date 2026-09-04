@@ -1,0 +1,289 @@
+/* ============================================================================
+   styles.css
+   Variabili di tema in cima (:root e body.dark), poi stili generali,
+   poi le singole sezioni dell'app nello stesso ordine in cui appaiono in
+   index.html. In fondo le regole responsive per schermi stretti (mobile).
+   ============================================================================ */
+
+:root {
+  --navy: #0b2440;
+  --blue: #2563eb;      /* colore pulsanti primari, personalizzabile dall'utente */
+  --service: #2563eb;   /* colore badge/voci "servizio", personalizzabile */
+  --work: #ff8a00;      /* colore badge/voci "lavoro", personalizzabile */
+  /* BUG RISOLTO: questa variabile veniva impostata da app.js ma non era mai
+     usata qui sotto, quindi il selettore "Colore barre/progressi" nelle
+     impostazioni non aveva alcun effetto. Ora la usano .progress-fill,
+     .percent e .mini-track div qui sotto. */
+  --progress: #2563eb;
+  --icon: #2563eb;       /* colore icone UI, personalizzabile (spec punto 18) */
+  --green: #27a45b;
+  --purple: #7c5cff;
+  --bg: #f7f9fc;
+  --card: #fff;
+  --text: #15243b;
+  --muted: #6d7890;
+  --border: #e6ebf2;
+  --shadow: 0 8px 30px rgba(15, 34, 61, .06);
+}
+
+body.dark {
+  --bg: #10161f;
+  --card: #17202c;
+  --text: #eef4ff;
+  --muted: #a8b2c2;
+  --border: #283445;
+}
+
+/* --- Base -------------------------------------------------------------- */
+* { box-sizing: border-box; }
+body { margin: 0; font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: var(--bg); color: var(--text); }
+button, input, select { font: inherit; }
+button { cursor: pointer; border: 0; }
+.hidden { display: none !important; }
+.card { background: var(--card); border: 1px solid var(--border); border-radius: 15px; box-shadow: var(--shadow); padding: 20px; }
+.clickable { cursor: pointer; }
+.clickable:hover { box-shadow: 0 10px 35px rgba(15, 34, 61, .1); }
+.section-kicker { font-size: 12px; font-weight: 700; letter-spacing: .02em; margin-bottom: 6px; }
+.subtle, .hint { font-size: 12px; color: var(--muted); }
+.primary { background: var(--blue); color: #fff; padding: 12px 18px; border-radius: 10px; font-weight: 600; }
+.primary.compact { padding: 10px 15px; border-radius: 999px; }
+.primary.full { width: 100%; margin-top: 18px; }
+.primary.half, .secondary.half { flex: 1; margin-top: 0; }
+.secondary { background: #fff; border: 1px solid var(--border); padding: 10px 14px; border-radius: 10px; }
+body.dark .secondary { background: #17202c; color: var(--text); }
+.link-btn { background: none; border: 0; color: var(--blue); font-size: 12px; padding: 10px 0 0; text-decoration: underline; }
+
+/* --- Sidebar e navigazione principale ----------------------------------- */
+.app-shell { min-height: 100vh; display: flex; }
+.sidebar { width: 230px; background: var(--navy); color: #fff; padding: 24px 16px; display: flex; flex-direction: column; position: sticky; top: 0; height: 100vh; }
+.brand { font-weight: 700; display: flex; align-items: center; gap: 10px; margin: 2px 8px 30px; }
+.brand-mark { width: 30px; height: 30px; border: 2px solid currentColor; border-radius: 50%; display: grid; place-items: center; }
+.sidebar nav { display: grid; gap: 8px; }
+.nav-item { background: transparent; color: #dce6f3; text-align: left; padding: 12px 12px; border-radius: 10px; display: flex; gap: 12px; align-items: center; }
+.nav-item.active, .nav-item:hover { background: #2563eb; color: #fff; }
+.sidebar-footer { margin-top: auto; color: #b9c7d8; font-size: 12px; padding: 10px 8px; }
+.sidebar-footer strong { font-size: 16px; color: #fff; }
+
+/* --- Barra superiore ----------------------------------------------------- */
+.main { flex: 1; min-width: 0; padding: 24px 34px 48px; }
+.topbar { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 22px; }
+.month-switcher { display: flex; align-items: center; gap: 20px; min-width: 0; }
+.month-title-wrap { text-align: center; }
+.month-title-wrap h1 { font-size: 30px; margin: 0 0 6px; }
+.circle-btn, .icon-btn { width: 42px; height: 42px; border-radius: 50%; background: #fff; color: var(--icon); box-shadow: 0 2px 12px rgba(15, 34, 61, .08); font-size: 26px; }
+body.dark .circle-btn, body.dark .icon-btn { background: #17202c; }
+.icon-btn { font-size: 18px; }
+.top-actions { display: flex; align-items: center; gap: 8px; }
+.annual-badge { background: #fff; border: 1px solid var(--border); border-radius: 12px; padding: 9px 13px; font-weight: 700; color: var(--blue); box-shadow: var(--shadow); font-size: 13px; }
+body.dark .annual-badge { background: #17202c; color: var(--text); }
+.annual-badge small { display: block; color: var(--muted); font-weight: 500; font-size: 9px; }
+.view { display: grid; gap: 18px; max-width: 1050px; margin: auto; }
+
+/* --- Barre di progresso (mese/anno) -------------------------------------
+   La barra e la percentuale usano var(--progress): e' l'unico colore
+   controllato dal selettore "Colore barre/progressi" nelle impostazioni. */
+.progress-row { display: flex; align-items: center; gap: 28px; margin-top: 16px; }
+.progress-track { position: relative; flex: 1; background: #e9edf4; border-radius: 999px; overflow: hidden; }
+body.dark .progress-track { background: #303b4c; }
+.progress-track.large { height: 48px; }
+.progress-track.xlarge { height: 58px; }
+.progress-fill { height: 100%; width: 0; border-radius: inherit; background: var(--progress); transition: width .35s ease; }
+/* Il testo "X / Y ore" è ancorato al bordo sinistro della barra, dentro la
+   parte colorata (come nel mockup), non centrato sull'intera larghezza. */
+.progress-track span { position: absolute; inset: 0; display: flex; align-items: center; padding-left: 22px; color: #fff; font-size: 20px; font-weight: 700; text-shadow: 0 1px 2px rgba(0, 0, 0, .12); }
+.percent { font-size: 22px; font-weight: 700; color: var(--progress); min-width: 54px; }
+
+/* --- Riepilogo mese (servizio / lavoro / studi) -------------------------- */
+/* --- Riepilogo mese (servizio / lavoro / studi) --------------------------
+   Spec punto 8: solo servizio, lavoro e studi biblici. Servizio/lavoro
+   affiancati; gli studi biblici occupano una riga propria a tutta
+   larghezza, con i controlli -/+ (spec punto 9). */
+.summary-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 12px; }
+.summary-badge { min-height: 76px; border: 1px solid var(--border); border-radius: 12px; padding: 13px; display: flex; align-items: center; gap: 10px; }
+.summary-badge small { display: block; font-size: 10px; color: var(--muted); margin-bottom: 4px; }
+.summary-badge strong { display: block; font-size: 20px; }
+.summary-icon { width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center; color: #fff; background: var(--service); font-size: 15px; }
+.summary-badge.work .summary-icon { background: var(--work); }
+.study-row { margin-top: 10px; border: 1px solid var(--border); border-radius: 12px; padding: 12px 16px; display: flex; align-items: center; justify-content: center; gap: 14px; font-size: 13px; font-weight: 600; }
+.study-row strong { font-size: 18px; min-width: 20px; text-align: center; }
+.stepper { width: 28px; height: 28px; border-radius: 8px; background: #f0f4fa; color: var(--icon); font-size: 18px; }
+
+/* --- Calendario ------------------------------------------------------------ */
+.calendar-card { padding-bottom: 15px; }
+.calendar-head { display: flex; justify-content: space-between; gap: 12px; align-items: center; margin-bottom: 14px; }
+.calendar { display: grid; grid-template-columns: repeat(7, 1fr); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
+.cal-head, .cal-cell { min-width: 0; border-right: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+.cal-head { padding: 9px 5px; text-align: center; font-size: 10px; font-weight: 700; color: var(--muted); background: #fafbfd; }
+.cal-cell { min-height: 92px; padding: 9px 8px; background: #fff; position: relative; cursor: pointer; }
+body.dark .calendar, body.dark .cal-cell { background: #17202c; }
+body.dark .cal-cell.outside { background: #131b25; }
+.cal-cell:nth-child(7n) { border-right: 0; }
+.cal-cell:hover { background: #f7faff; }
+.cal-cell.outside { color: #b8c0ce; background: #fafbfd; }
+.day-num { font-size: 12px; font-weight: 600; }
+.entry { font-size: 11px; margin-top: 8px; font-weight: 600; }
+.entry.service { color: var(--service); }
+.entry.work { color: var(--work); }
+.legend { display: flex; justify-content: center; gap: 22px; margin-top: 12px; font-size: 11px; color: var(--muted); }
+.dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 5px; }
+.service-dot { background: var(--service); }
+.work-dot { background: var(--work); }
+
+/* --- Riepilogo annuale ----------------------------------------------------- */
+.page-title h2 { margin: 3px 0 0; font-size: 25px; }
+.annual-progress-card { display: grid; gap: 14px; }
+.annual-progress-row { margin-top: 0; }
+.annual-stats { display: flex; gap: 30px; }
+.annual-stats small { display: block; color: var(--muted); font-size: 11px; }
+.annual-stats strong { font-size: 22px; }
+.annual-months { display: grid; grid-template-columns: 1fr; gap: 10px; }
+.annual-month { border: 1px solid var(--border); border-radius: 12px; padding: 14px; }
+.annual-month.clickable:hover { background: #f7faff; border-color: #cfe0fb; }
+.annual-month-head { display: flex; justify-content: space-between; font-size: 14px; font-weight: 600; }
+.annual-month-pct { color: var(--blue); margin: 0 4px; }
+.mini-track { height: 8px; background: #edf0f5; border-radius: 999px; overflow: hidden; margin: 10px 0; }
+body.dark .mini-track { background: #303b4c; }
+.mini-track div { height: 100%; background: var(--progress); border-radius: inherit; }
+
+/* --- Impostazioni ------------------------------------------------------------ */
+.settings-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+.settings-card h3, .db-card h3 { margin-top: 0; }
+.settings-card label { display: grid; gap: 6px; font-size: 12px; font-weight: 600; margin: 12px 0; }
+.settings-card input, .settings-card select, .auth-row input { width: 100%; padding: 11px 12px; border: 1px solid var(--border); border-radius: 9px; background: #fff; }
+body.dark input, body.dark select { background: #17202c; color: var(--text); }
+.monthly-goals { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.monthly-goals label { margin: 0; }
+.setting-note, .db-card p { font-size: 12px; color: var(--muted); line-height: 1.5; }
+.db-status { padding: 10px 12px; background: #f4f7fb; border-radius: 9px; font-size: 12px; margin: 10px 0; }
+.auth-row { display: grid; grid-template-columns: 1fr 1fr auto auto auto; gap: 8px; }
+.settings-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+.export-btn { padding: 12px 18px; }
+
+/* --- Modali (inserimento ore ed export) -------------------------------------- */
+.modal { position: fixed; inset: 0; z-index: 20; display: grid; place-items: center; }
+.modal-backdrop { position: absolute; inset: 0; background: rgba(5, 18, 34, .42); backdrop-filter: blur(3px); }
+.modal-sheet { position: relative; width: min(430px, calc(100vw - 24px)); background: #fff; border-radius: 20px; padding: 22px; box-shadow: 0 20px 70px rgba(0, 0, 0, .25); }
+body.dark .modal-sheet { background: #17202c; }
+.modal-sheet-tall { max-height: 92vh; overflow-y: auto; }
+.modal-header { display: flex; justify-content: space-between; align-items: start; }
+.modal-header h2 { margin: 0 0 4px; }
+/* Header del modale "Aggiungi ore": Annulla | titolo centrato | azione di salvataggio. */
+.modal-header.ios-header { align-items: center; }
+.modal-header.ios-header h2 { flex: 1; text-align: center; font-size: 16px; margin: 0; }
+.modal-header.ios-header .link-btn { padding: 0; flex: 0 0 auto; white-space: nowrap; }
+.center-text { text-align: center; margin-top: 2px; }
+.modal-sheet label { display: grid; gap: 6px; font-size: 12px; font-weight: 600; margin-top: 16px; }
+.modal-sheet input[type=date] { padding: 11px; border: 1px solid var(--border); border-radius: 9px; }
+.existing-title { font-size: 11px; font-weight: 700; color: var(--muted); margin-top: 16px; }
+.day-entries { display: grid; gap: 7px; margin-top: 8px; }
+.day-entry-row { display: flex; justify-content: space-between; align-items: center; border: 1px solid var(--border); border-radius: 10px; padding: 9px 10px; background: #fafbfd; }
+body.dark .day-entry-row { background: #131b25; }
+.day-entry-row strong { display: inline-block; font-size: 14px; margin-right: 8px; }
+.day-entry-row small { font-size: 10px; color: var(--muted); }
+.entry-actions { display: flex; gap: 5px; }
+.entry-actions button { width: 30px; height: 30px; border-radius: 8px; background: #fff; border: 1px solid var(--border); }
+body.dark .entry-actions button { background: #131b25; }
+.entry-form-divider { height: 1px; background: var(--border); margin-top: 14px; }
+.type-switch { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 16px; }
+.type-btn { padding: 11px; border-radius: 10px; border: 1px solid var(--border); background: #fff; font-weight: 600; }
+.type-btn.service.active { background: var(--service); color: #fff; }
+.type-btn.work.active { background: var(--work); color: #fff; }
+.wheel-labels { display: grid; grid-template-columns: 1fr 1fr; margin-top: 16px; text-align: center; font-size: 11px; color: var(--muted); }
+.wheels { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 4px; }
+.wheel { height: 160px; overflow-y: auto; scroll-snap-type: y mandatory; border-radius: 12px; background: #f7f9fc; padding: 56px 0; }
+.wheel::-webkit-scrollbar { display: none; }
+.wheel-item { height: 48px; display: grid; place-items: center; scroll-snap-align: center; font-size: 18px; color: #9aa4b5; }
+.wheel-item.selected { font-size: 22px; font-weight: 700; color: var(--text); background: #eaf0fa; }
+/* Riga con i due pulsanti "Annulla" / "Salva" affiancati (nuova funzione). */
+.modal-buttons-row { display: flex; gap: 10px; margin-top: 18px; }
+
+.export-sheet { width: min(760px, calc(100vw - 24px)); }
+.export-table-wrap { overflow-x: auto; margin-top: 18px; border: 1px solid var(--border); border-radius: 10px; }
+.export-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+.export-table th, .export-table td { padding: 10px 11px; border-bottom: 1px solid var(--border); text-align: left; white-space: nowrap; }
+.export-table th { background: #f7f9fc; font-size: 10px; text-transform: uppercase; color: var(--muted); }
+body.dark .export-table th { background: #131b25; }
+.export-table tr:last-child td { border-bottom: 0; }
+.export-table td:not(:first-child), .export-table th:not(:first-child) { text-align: right; }
+
+/* --- Toast ------------------------------------------------------------------ */
+.toast { position: fixed; left: 50%; bottom: 24px; transform: translateX(-50%); background: var(--navy); color: #fff; padding: 12px 18px; border-radius: 999px; font-size: 12px; z-index: 30; }
+
+/* --- Utility mobile visibili solo sotto gli 800px (vedi media query) ----- */
+.mobile-only, .mobile-brand { display: none; }
+
+/* --- Layout responsive (mobile) -------------------------------------------- */
+@media (max-width: 800px) {
+  .sidebar { position: fixed; z-index: 50; left: -250px; transition: left .2s; }
+  .sidebar.open { left: 0; }
+  .sidebar-footer { display: none; }
+  .main { padding: 14px 12px 28px; }
+  .mobile-only, .mobile-brand { display: block; }
+  .topbar { flex-wrap: wrap; }
+  .mobile-brand { font-weight: 700; order: 1; }
+  .mobile-only { order: 0; }
+  .top-actions { order: 2; margin-left: auto; }
+  .month-switcher { order: 3; width: 100%; justify-content: space-between; gap: 8px; }
+  .month-title-wrap h1 { font-size: 23px; }
+  .hint { font-size: 10px; }
+  .annual-badge { font-size: 11px; }
+  .top-actions .icon-btn { display: none; }
+  .progress-row { gap: 12px; }
+  .progress-track.large { height: 46px; }
+  .progress-track span { font-size: 17px; }
+  .percent { font-size: 18px; min-width: 42px; }
+  .summary-grid { grid-template-columns: 1fr 1fr; }
+  .calendar-head { align-items: flex-end; }
+  .calendar-head .subtle { max-width: 220px; }
+  .cal-cell { min-height: 64px; padding: 6px; }
+  .entry { font-size: 9px; margin-top: 6px; }
+  .settings-grid, .annual-months { grid-template-columns: 1fr; }
+  .auth-row { grid-template-columns: 1fr 1fr; }
+  .auth-row button { grid-column: auto; }
+  .wheel { height: 180px; }
+  .modal-sheet { padding: 18px; }
+  .settings-actions > * { flex: 1; }
+  .export-sheet { width: calc(100vw - 20px); }
+  .modal-sheet-tall { max-height: 94vh; }
+  .day-entry-row { padding: 8px; }
+  .export-table { font-size: 11px; }
+}
+
+/* --- Icone nei pulsanti di navigazione (sidebar e bottom-nav) ------------ */
+.nav-item .ic, .bottom-nav-item .ic { font-style: normal; display: inline-block; }
+.bottom-nav-item .ic { color: var(--icon); font-size: 19px; }
+
+/* --- Blocco informativo "Regola abbuono lavoro" (novita' dal mockup) ----- */
+.abbuono-info { margin-top: 14px; border-top: 1px solid var(--border); padding-top: 10px; }
+.abbuono-info summary { cursor: pointer; font-size: 12px; font-weight: 700; color: var(--blue); list-style: none; }
+.abbuono-info summary::-webkit-details-marker { display: none; }
+.abbuono-info summary::before { content: "ℹ️ "; }
+.abbuono-info p { font-size: 12px; color: var(--muted); line-height: 1.5; margin: 8px 0 0; }
+
+/* --- Link testuale centrato, usato per "Annulla" sotto il pulsante Salva - */
+.link-btn.center { display: block; width: 100%; text-align: center; margin-top: 12px; }
+.link-btn.strong { font-weight: 700; }
+
+/* --- Barra di navigazione inferiore (mobile), come nel mockup fornito --- */
+.bottom-nav {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 40;
+  background: #fff; border-top: 1px solid var(--border);
+  display: grid; grid-template-columns: repeat(5, 1fr);
+  padding: 6px 2px calc(6px + env(safe-area-inset-bottom));
+}
+body.dark .bottom-nav { background: #17202c; }
+.bottom-nav-item { background: transparent; display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 6px 2px; font-size: 9px; color: var(--muted); border-radius: 10px; }
+.bottom-nav-item .ic { font-size: 18px; }
+.bottom-nav-item.active { color: var(--blue); }
+.bottom-nav-item.active .ic { color: var(--blue); }
+#bottomAddBtn .ic { font-weight: 700; }
+
+/* Su mobile la bottom-nav e' fissa: aggiungiamo spazio in fondo al
+   contenuto principale per non farlo finire nascosto sotto la barra. */
+@media (max-width: 800px) {
+  .main { padding-bottom: 86px; }
+  .bottom-nav { display: grid; }
+}
+@media (min-width: 801px) {
+  .bottom-nav { display: none; }
+}

@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#0b2440" />
+  <title>Il mio servizio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div id="app" class="app-shell">
+    <aside class="sidebar">
+      <div class="brand"><span class="brand-mark">◷</span><span>Il mio servizio</span></div>
+      <nav>
+        <button data-nav="month" class="nav-item active"><i class="ic">▣</i> <span>Mese</span></button>
+        <button data-nav="calendar" class="nav-item"><i class="ic">▦</i> <span>Calendario</span></button>
+        <button data-nav="annual" class="nav-item"><i class="ic">◔</i> <span>Riepilogo annuale</span></button>
+        <button data-nav="settings" class="nav-item"><i class="ic">⚙</i> <span>Impostazioni</span></button>
+      </nav>
+      <div class="sidebar-footer">Obiettivo annuale<br><strong id="sideAnnualGoal">600:00</strong></div>
+      <!-- NOVITA' (dal mockup fornito): voce "Esci" in fondo alla sidebar,
+           visibile solo se e' stato effettuato l'accesso a un account. -->
+      <button id="sidebarSignOutBtn" class="nav-item signout-item hidden"><i class="ic">⇦</i> <span>Esci</span></button>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <div class="mobile-brand"><span class="brand-mark">◷</span> Il mio servizio</div>
+        <button id="menuBtn" class="icon-btn mobile-only">☰</button>
+        <div class="month-switcher">
+          <button id="prevMonth" class="circle-btn" aria-label="Mese precedente">‹</button>
+          <div class="month-title-wrap">
+            <h1 id="monthTitle">—</h1>
+            <div id="swipeHint" class="hint">Scorri a destra o sinistra per cambiare mese</div>
+          </div>
+          <button id="nextMonth" class="circle-btn" aria-label="Mese successivo">›</button>
+        </div>
+        <div class="top-actions">
+          <button id="annualBadge" class="annual-badge">— <small>Totale anno</small></button>
+          <button data-nav="settings" class="icon-btn" title="Impostazioni">⚙</button>
+        </div>
+      </header>
+
+      <section id="monthView" class="view">
+        <div class="card progress-card clickable" id="monthProgressCard" role="button" tabindex="0">
+          <div class="section-kicker">PROGRESSO MESE</div>
+          <div class="progress-row">
+            <div class="progress-track large"><div id="monthProgress" class="progress-fill service-fill"></div><span id="monthProgressText">— / — ore</span></div>
+            <div id="monthPercent" class="percent">0%</div>
+          </div>
+        </div>
+
+        <div class="card summary-card">
+          <div class="section-kicker">RIEPILOGO MESE</div>
+          <div class="summary-grid">
+            <div class="summary-badge service"><span class="summary-icon">📖</span><div><small id="serviceLabel">Servizio di predicazione</small><strong id="serviceTotal">0:00</strong></div></div>
+            <div class="summary-badge work"><span class="summary-icon">🔧</span><div><small id="workLabel">Lavori di manutenzione</small><strong id="workTotal">0:00</strong></div></div>
+          </div>
+          <div class="study-row"><span id="studyLabel">Studi biblici</span><button class="stepper" data-step="-1" aria-label="Diminuisci">−</button><strong id="studiesCount">0</strong><button class="stepper" data-step="1" aria-label="Aumenta">+</button></div>
+        </div>
+
+        <div class="calendar-card card">
+          <div class="calendar-head"><div><div class="section-kicker">CALENDARIO</div><div class="subtle">Clicca un giorno per inserire direttamente le ore</div></div><button id="addHoursBtn" class="primary compact">+ Aggiungi ore</button></div>
+          <div id="calendar" class="calendar"></div>
+          <div class="legend"><span><i class="dot service-dot"></i><span id="legendService">Servizio</span></span><span><i class="dot work-dot"></i><span id="legendWork">Lavoro</span></span></div>
+          <!-- NOVITA' (dal mockup): breve promemoria della regola dell'abbuono
+               lavoro (spec punto 11), espandibile senza bisogno di JS. -->
+          <details class="abbuono-info">
+            <summary>Regola abbuono lavoro</summary>
+            <p>Se il servizio del mese è sotto le 55 ore, le ore di lavoro possono integrare il totale valido fino a quella soglia. Oltre le 55 ore di servizio, le ore di lavoro non vengono più aggiunte, qualunque sia l'obiettivo del mese.</p>
+          </details>
+        </div>
+      </section>
+
+      <section id="annualView" class="view hidden">
+        <div class="page-title"><div><div class="section-kicker">RIEPILOGO ANNUALE</div><h2 id="annualTitle">Anno di servizio</h2></div></div>
+        <div class="card annual-progress-card">
+          <div class="progress-row annual-progress-row"><div class="progress-track xlarge"><div id="annualProgress" class="progress-fill annual-fill"></div><span id="annualProgressText">0 / 600 ore</span></div><div id="annualPercent" class="percent">0%</div></div>
+          <div class="annual-stats"><div><small>Ore effettuate</small><strong id="annualDone">0:00</strong></div><div><small>Ore rimanenti</small><strong id="annualRemaining">600:00</strong></div></div>
+        </div>
+        <div id="annualMonths" class="annual-months"></div>
+      </section>
+
+      <section id="calendarView" class="view hidden">
+        <div class="page-title"><div><div class="section-kicker">CALENDARIO</div><h2>Calendario mensile</h2></div></div>
+        <div class="card"><div id="calendarLarge" class="calendar"></div></div>
+      </section>
+
+      <section id="settingsView" class="view hidden">
+        <div class="page-title"><div><div class="section-kicker">IMPOSTAZIONI</div><h2>Preferenze</h2></div></div>
+        <div class="settings-grid">
+          <div class="card settings-card">
+            <h3>Generali</h3>
+            <label>Tema<select id="themeSelect"><option value="light">Chiaro</option><option value="dark">Scuro</option></select></label>
+            <label>Obiettivo annuale (ore)<input id="annualGoalInput" type="number" min="1" step="1" value="600"></label>
+            <div class="setting-note">Gli obiettivi mensili si impostano singolarmente qui sotto.</div>
+          </div>
+          <div class="card settings-card">
+            <h3>Obiettivi mensili</h3>
+            <div id="monthlyGoals" class="monthly-goals"></div>
+          </div>
+          <div class="card settings-card">
+            <h3>Campi personalizzati</h3>
+            <label>Nome servizio<input id="serviceNameInput" type="text"></label>
+            <label>Nome lavoro<input id="workNameInput" type="text"></label>
+            <label>Nome studi<input id="studyNameInput" type="text" value="Studi biblici"></label>
+          </div>
+          <div class="card settings-card">
+            <h3>Impostazioni avanzate</h3>
+            <label>Colore servizio<input id="serviceColorInput" type="color"></label>
+            <label>Colore lavoro<input id="workColorInput" type="color"></label>
+            <label>Colore barre/progressi<input id="progressColorInput" type="color"></label>
+            <label>Colore pulsanti<input id="buttonColorInput" type="color"></label>
+            <label>Colore icone<input id="iconColorInput" type="color"></label>
+            <label>Colore testi<input id="textColorInput" type="color"></label>
+            <label>Colore sfondo<input id="bgColorInput" type="color"></label>
+            <button id="resetStyleBtn" class="secondary">Ripristina stile</button>
+          </div>
+        </div>
+        <div class="settings-actions"><button id="saveSettingsBtn" class="primary">Salva impostazioni</button><button id="openExportBtn" class="secondary export-btn">⇩ Esporta riepilogo</button></div>
+        <div class="card db-card">
+          <h3>Connessione database</h3>
+          <p>Questa versione usa Supabase per sincronizzare i dati tra dispositivi. Inserisci le chiavi nel file <code>config.js</code>, poi crea le tabelle con <code>supabase.sql</code>.</p>
+          <div id="dbStatus" class="db-status">Configurazione non verificata</div>
+          <div class="auth-row">
+            <input id="emailInput" type="email" placeholder="Email">
+            <input id="passwordInput" type="password" placeholder="Password">
+            <button id="signInBtn" class="secondary">Accedi</button>
+            <button id="signUpBtn" class="secondary">Registrati</button>
+            <button id="signOutBtn" class="secondary signout-item hidden">Esci</button>
+          </div>
+          <button id="forgotPasswordBtn" class="link-btn">Password dimenticata?</button>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- NOVITA' (dal mockup fornito): barra di navigazione fissa in basso,
+       visibile solo su mobile (vedi styles.css), con le 5 azioni principali. -->
+  <nav class="bottom-nav mobile-only">
+    <button data-nav="month" class="bottom-nav-item active"><i class="ic">▣</i><span>Mese</span></button>
+    <button data-nav="calendar" class="bottom-nav-item"><i class="ic">▦</i><span>Calendario</span></button>
+    <button id="bottomAddBtn" class="bottom-nav-item"><i class="ic">+</i><span>Aggiungi ore</span></button>
+    <button data-nav="annual" class="bottom-nav-item"><i class="ic">◔</i><span>Riepilogo</span></button>
+    <button data-nav="settings" class="bottom-nav-item"><i class="ic">⚙</i><span>Impostazioni</span></button>
+  </nav>
+
+  <div id="entryModal" class="modal hidden" aria-hidden="true">
+    <div class="modal-backdrop"></div>
+    <div class="modal-sheet modal-sheet-tall">
+      <!-- Header in stile "form sheet" iOS: Annulla a sinistra, titolo al
+           centro, azione di salvataggio a destra. Il pulsante a destra e
+           quello grande in fondo eseguono la STESSA azione (saveEntry) e
+           mostrano sempre lo stesso testo, cosi' non c'e' ambiguita' su
+           quale dei due usare. -->
+      <div class="modal-header ios-header">
+        <button id="cancelEntryBtn" class="link-btn">Annulla</button>
+        <h2 id="modalTitle">Aggiungi ore</h2>
+        <button id="topSaveEntryBtn" class="link-btn strong">Aggiungi ore</button>
+      </div>
+      <div id="selectedDateLabel" class="subtle center-text">—</div>
+      <label>Data<input id="entryDate" type="date"></label>
+      <div id="existingEntriesTitle" class="existing-title">Nessun inserimento in questo giorno</div>
+      <div id="dayEntries" class="day-entries"></div>
+      <div class="entry-form-divider"></div>
+      <div class="type-switch"><button id="serviceTypeBtn" class="type-btn service active">Servizio</button><button id="workTypeBtn" class="type-btn work">Lavoro</button></div>
+      <div class="wheel-labels"><span>Ore</span><span>Minuti</span></div>
+      <div class="wheels"><div class="wheel" id="hoursWheel"></div><div class="wheel" id="minutesWheel"></div></div>
+      <button id="saveEntryBtn" class="primary full">Aggiungi ore</button>
+    </div>
+  </div>
+
+  <div id="exportModal" class="modal hidden" aria-hidden="true">
+    <div class="modal-backdrop"></div>
+    <div class="modal-sheet export-sheet">
+      <div class="modal-header"><div><h2 id="exportTitle">Esportazione</h2><div class="subtle">Riepilogo semplice dell'anno di servizio</div></div><button id="closeExport" class="icon-btn">×</button></div>
+      <div class="export-table-wrap"><table class="export-table"><thead><tr><th>Mese</th><th>Ore</th><th>Servizio</th><th>Lavoro</th><th>Studi</th></tr></thead><tbody id="exportTableBody"></tbody></table></div>
+      <button id="downloadCSVBtn" class="primary full">⇩ Scarica tabella CSV</button>
+    </div>
+  </div>
+
+  <div id="toast" class="toast hidden"></div>
+
+  <!-- SDK Supabase e config: script "classici" (non moduli), espongono
+       window.supabase e window.SUPABASE_CONFIG usati da js/storage.js -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="config.js"></script>
+  <!-- Punto di ingresso dell'app, come modulo ES: importa tutti gli altri
+       file da js/. Richiede di essere servito via http/https (va bene
+       Vercel, "npx serve", ecc.) — non funziona aprendo il file con
+       doppio click (protocollo file://), per limitazioni dei moduli. -->
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>
